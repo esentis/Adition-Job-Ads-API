@@ -2,13 +2,37 @@ var express = require('express');
 var router = express.Router();
 var Ad = require('../models/adModel.js');
 
-router.get('/', function (req, res) {
-    Ad.find().exec(function (err, foundAds) {
-        var ads = [];
-        if (err) res.status(400).json({ success: false, msg: `${err}` });
-        foundAds.forEach(ad => ads.push(ad.toDto()));
-        res.send(ads);
-    });
+router.get('/', async function (req, res) {
+
+    // destructure page and limit and set default values if not provided
+    const { page = 1, limit = 10 } = req.body;
+    // get total documents in the Ads collection 
+    const count = await Ad.countDocuments();
+    var totalpages = Math.ceil(count / limit);
+
+    if (req.body.page != undefined) {
+        if (req.body.page > totalpages) {
+            res.status(404).json({ success: false, msg: `Page ${req.body.page} doesn't exist` }).end();
+        } else {
+            const ads = await Ad.find().limit(limit * 1).skip((page - 1) * limit).exec();
+            res.json({
+                ads,
+                totalPages: totalpages,
+                currentPage: page
+            });
+        }
+    } else {
+        const ads = await Ad.find().limit(limit * 1).skip((page - 1) * limit).exec();
+        res.json({
+            ads,
+            totalPages: totalpages,
+            currentPage: page
+        });
+    }
+
+
+    // return response with posts, total pages, and current page
+
 });
 
 router.get('/latest', function (req, res) {
