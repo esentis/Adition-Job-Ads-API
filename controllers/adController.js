@@ -29,10 +29,6 @@ router.get('/', async function (req, res) {
             currentPage: page
         });
     }
-
-
-    // return response with posts, total pages, and current page
-
 });
 
 router.get('/latest', function (req, res) {
