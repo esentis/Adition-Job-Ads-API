@@ -13,7 +13,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 
 
-app.use('/ads', urlencodedParser, ads);
+app.use('/ads', jsonParser, ads);
 
 app.listen(3000, function () {
     console.log("Express server listening on port ", 3000);
