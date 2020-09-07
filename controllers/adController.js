@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Ad = require('../models/adModel.js');
+const escapeRegex = require('../helpers/regex-eescape.js');
 
 router.get('/', async function (req, res) {
 
@@ -53,9 +54,9 @@ router.get('/:id', function (req, res) {
 });
 
 router.get('/search/:term', function (req, res) {
-    const term = req.params.term;
+    const term = escapeRegex(req.params.term);
     if (term.length < 4) {
-        res.status(400).json({ success: false, msg: 'At least 4 characters are needed' });
+        res.status(400).json({ success: false, msg: 'At least 4 characters are needed' }).end();
     } else {
         Ad.find({
             title: { "$regex": `${term}`, "$options": "i" }
