@@ -36,7 +36,7 @@ router.get('/', async function (req, res) {
         }
     } else {
         const ads = await Ad.find().limit(limit * 1).skip((page - 1) * limit).exec();
-        var adsDto = [];
+        adsDto = [];
         ads.forEach(ad => {
             adsDto.push(ad.toDto());
         })
