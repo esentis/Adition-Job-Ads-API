@@ -16,16 +16,24 @@ router.get('/', async function (req, res) {
             res.status(404).json({ success: false, msg: `Page ${req.body.page} doesn't exist` }).end();
         } else {
             const ads = await Ad.find().limit(limit * 1).skip((page - 1) * limit).exec();
+            var adsDto = [];
+            ads.forEach(ad => {
+                adsDto.push(ad.toDto());
+            })
             res.json({
-                ads,
+                adsDto,
                 totalPages: totalpages,
                 currentPage: page
             });
         }
     } else {
         const ads = await Ad.find().limit(limit * 1).skip((page - 1) * limit).exec();
+        var adsDto = [];
+        ads.forEach(ad => {
+            adsDto.push(ad.toDto());
+        })
         res.json({
-            ads,
+            adsDto,
             totalPages: totalpages,
             currentPage: page
         });
@@ -73,12 +81,12 @@ router.get('/search/:term', function (req, res) {
 })
 
 router.post('/add', function (req, res) {
-
+    req.json
     const newAdd = new Ad({
         title: req.body.title,
         description: req.body.description,
         company: req.body.company,
-        salary: req.body.payroll,
+        salary: req.body.salary,
         currency: req.body.currency,
         contact: req.body.contact,
         author: req.body.author,
@@ -86,7 +94,7 @@ router.post('/add', function (req, res) {
         sponsored: req.body.sponsored,
     })
     newAdd.save(function (err, newAdd) {
-        if (err) return res.status(400).json({ success: false, msg: `${err}` });
+        if (err) return res.status(400).json({ success: false, msg: `Something went wrong ${err}` });
         res.status(201).json({ success: true, createdAt: (req.get('host') + req.baseUrl + '/' + newAdd._id) });
 
     });
