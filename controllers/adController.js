@@ -89,7 +89,6 @@ router.get('/search/:term', function (req, res) {
 })
 
 router.post('/add', function (req, res) {
-    req.json
     const newAdd = new Ad({
         title: req.body.title,
         description: req.body.description,
