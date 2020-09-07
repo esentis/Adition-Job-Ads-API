@@ -6,14 +6,22 @@ const escapeRegex = require('../helpers/regex-eescape.js');
 router.get('/', async function (req, res) {
 
     // destructure page and limit and set default values if not provided
-    const { page = 1, limit = 10 } = req.body;
+    var { page = 1, limit = 10 } = req.query;
+
+    // For some reason null values from Flutter are translated as '' 
+    if (req.query.limit == '') {
+        limit = 10;
+    }
+    if (req.query.page == '') {
+        page = 1;
+    }
     // get total documents in the Ads collection 
     const count = await Ad.countDocuments();
     var totalpages = Math.ceil(count / limit);
 
-    if (req.body.page != undefined) {
-        if (req.body.page > totalpages) {
-            res.status(404).json({ success: false, msg: `Page ${req.body.page} doesn't exist` }).end();
+    if (req.query.page != undefined) {
+        if (req.query.page > totalpages) {
+            res.status(404).json({ success: false, msg: `Page ${req.query.page} doesn't exist` }).end();
         } else {
             const ads = await Ad.find().limit(limit * 1).skip((page - 1) * limit).exec();
             var adsDto = [];
