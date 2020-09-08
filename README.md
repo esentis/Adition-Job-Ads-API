@@ -2,8 +2,8 @@
 
 ## Overview
 
-An API to create job ads.
-**Teck stack used:**</br>
+An API to create job ads.</br>
+**Tech stack used:**</br>
 ![Alt text](/screenshots/teckstack.png "1")
 
 ### Ad Model
