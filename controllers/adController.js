@@ -72,7 +72,7 @@ router.get('/:id', function (req, res) {
 router.get('/search/:term', function (req, res) {
     const term = escapeRegex(req.params.term);
     if (term.length < 4) {
-        res.status(400).json({ success: false, msg: 'At least 4 characters are needed' }).end();
+        res.status(404).json({ success: false, msg: 'At least 4 characters are needed' }).end();
     } else {
         Ad.find({
             title: { "$regex": `${term}`, "$options": "i" }
@@ -90,7 +90,7 @@ router.get('/search/:term', function (req, res) {
 
 router.post('/add', function (req, res) {
     const newAdd = new Ad({
-        title: req.body.title,
+        title: `${escapeRegex(req.body.title)} (#${req.body.company.substring(0, 1).toUpperCase()}${req.body.company.substring(req.body.company.length - 1, req.body.company.length).toUpperCase()}${Date.now().toString().substring(5, 10)}-${Date.now().toString().substring(10, 12)})`,
         description: req.body.description,
         company: req.body.company,
         salary: req.body.salary,
@@ -99,9 +99,11 @@ router.post('/add', function (req, res) {
         author: req.body.author,
         images: req.body.images,
         sponsored: req.body.sponsored,
+        location: req.body.location,
+        employmentType: req.body.employmentType,
     })
     newAdd.save(function (err, newAdd) {
-        if (err) return res.status(400).json({ success: false, msg: `Something went wrong ${err}` });
+        if (err) return res.status(400).json({ success: false, msg: err });
         res.status(201).json({ success: true, createdAt: (req.get('host') + req.baseUrl + '/' + newAdd._id) });
 
     });
@@ -128,7 +130,7 @@ router.put('/update/:id/description', function (req, res) {
         { runValidators: true })
         .exec(function (err) {
             if (err) {
-                res.status(400).json({ msg: `${err}` });
+                res.status(400).json({ msg: err });
             } else {
                 res.json({ success: true, msg: `Document ${req.params.id} description updated` })
             }
