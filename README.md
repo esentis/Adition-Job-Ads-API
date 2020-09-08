@@ -3,7 +3,8 @@
 ## Overview
 
 An API to create job ads.
-Made with Nodejs and Express and MongoDB.
+**Teck stack used:**</br>
+![Alt text](/screenshots/teckstack.png "1")
 
 ### Ad Model
 
