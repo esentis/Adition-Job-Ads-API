@@ -11,9 +11,9 @@ router.post('/', async function (req, res) {
         return res.status(404).send("The user already exists");
     }
     if (!isAlphaNumericOnly(req.body.password)) {
-        res.status(404).send("Password must only containt Alphanumeric characters");
+        res.status(404).send("Password must only contain Alphanumeric characters");
     } else if (!isGoodPassword(req.body.password)) {
-        res.status(404).send("Password must only containt Alphanumeric characters");
+        res.status(404).send("Password requires at least one number, one lowercase and one uppercase letter and at least six characters.");
     } else {
         var user = new User({
             username: req.body.username,
