@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Ad = require('../models/Ad.js');
-const escapeRegex = require('../helpers/regex-eescape.js');
+const escapeRegex = require('../helpers/regex-escape.js');
 
 router.get('/', async function (req, res) {
 
