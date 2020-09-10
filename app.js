@@ -1,5 +1,6 @@
 var express = require('express');
 var ads = require('./controllers/adController.js');
+var users = require('./controllers/userController.js');
 var bodyParser = require('body-parser');
 require('./db_connection.js');
 
@@ -14,6 +15,7 @@ var jsonParser = bodyParser.json()
 
 
 app.use('/ads', jsonParser, ads);
+app.use('/user', jsonParser, users);
 
 app.listen(3000, function () {
     console.log("Express server listening on port ", 3000);
