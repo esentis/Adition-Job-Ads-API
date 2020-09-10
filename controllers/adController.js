@@ -48,16 +48,16 @@ router.get('/', async function (req, res) {
     }
 });
 
-router.get('/latest', function (req, res) {
-    Ad.findOne().sort({ postDate: -1 }).exec(function (err, ad) {
+router.get('/latest', async function (req, res) {
+    await Ad.findOne().sort({ postDate: -1 }).exec(function (err, ad) {
         if (err) res.status(400).json({ success: false, msg: `${err}` });
         if (!ad) return res.status(404).json({ success: false, msg: 'No ads found' })
         res.send(ad.toDto());
     });
 });
 
-router.get('/:id', function (req, res) {
-    Ad.findOne({ _id: req.params.id }).exec(function (err, ad) {
+router.get('/:id', async function (req, res) {
+    await Ad.findOne({ _id: req.params.id }).exec(function (err, ad) {
         if (err) return res.status(400).json({ success: false, msg: `${err}` });
         if (!ad) {
             return res.status(404).json({ success: false, msg: 'No ads found' })
@@ -69,12 +69,12 @@ router.get('/:id', function (req, res) {
     });
 });
 
-router.get('/search/:term', function (req, res) {
+router.get('/search/:term', async function (req, res) {
     const term = escapeRegex(req.params.term);
     if (term.length < 4) {
         res.status(404).json({ success: false, msg: 'At least 4 characters are needed' }).end();
     } else {
-        Ad.find({
+        await Ad.find({
             title: { "$regex": `${term}`, "$options": "i" }
         })
             .exec(function (err, found) {
@@ -88,7 +88,7 @@ router.get('/search/:term', function (req, res) {
     }
 })
 
-router.post('/add', function (req, res) {
+router.post('/add', async function (req, res) {
     const newAdd = new Ad({
         title: `${escapeRegex(req.body.title)} (#${req.body.company.substring(0, 1).toUpperCase()}${req.body.company.substring(req.body.company.length - 1, req.body.company.length).toUpperCase()}${Date.now().toString().substring(5, 10)}-${Date.now().toString().substring(10, 12)})`,
         description: req.body.description,
@@ -102,7 +102,7 @@ router.post('/add', function (req, res) {
         location: req.body.location,
         employmentType: req.body.employmentType,
     })
-    newAdd.save(function (err, newAdd) {
+    await newAdd.save(function (err, newAdd) {
         if (err) return res.status(400).json({ success: false, msg: err });
         res.status(201).json({ success: true, createdAt: (req.get('host') + req.baseUrl + '/' + newAdd._id) });
 
