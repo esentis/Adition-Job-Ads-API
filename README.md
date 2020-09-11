@@ -33,6 +33,27 @@ On title is also appended a unique code.
 (#${company.substring(0, 1).toUpperCase()}${company.substring(company.length - 1, company.length).toUpperCase()}${Date.now().toString().substring(5, 10)}-${Date.now().toString().substring(10, 12)})
 ```
 
+### User Model
+
+```javascript
+
+{
+    username: { type: String, minlength: 5, required: true, unique: true },
+    email: {
+        type: String,
+        trim: true,
+        lowercase: true,
+        unique: true,
+        required: true,
+        validate: validate.isEmail,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+}
+```
+
 ### HTTP Requests
 
 ## POST /ads/add
